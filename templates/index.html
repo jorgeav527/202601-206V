@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro</title>
+</head>
+<body>
+
+    <h2>Registro de persona</h2>
+
+    <form action="/count" method="post">
+        
+        <label for="nombre">Nombre:</label><br>
+        <input type="text" id="nombre" name="nombre" required>
+        <br><br>
+
+        <label for="edad">Edad:</label><br>
+        <input type="number" id="edad" name="edad" min="0" required>
+        <br><br>
+
+        <label for="casado">¿Está casado?</label>
+        <input type="checkbox" id="casado" name="casado">
+        <br><br>
+
+        <button type="submit">OK</button>
+
+    </form>
+
+</body>
+</html>
