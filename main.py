@@ -4,3 +4,15 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/hello")
+def hello_world():
+    return "<p>Hello, World!</p>"
+
+@app.route("/ch")
+def check_held():
+    return "OK"
