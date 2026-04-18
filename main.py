@@ -9,3 +9,21 @@ def hello_world():
 @app.route("/ch")
 def check_held():
     return "OK"
+
+@app.route("/readme")
+def r_w():
+    with open("README.md") as file:
+        content = file.read()
+    return content
+
+@app.route("/count")
+def count():
+
+    with open("count.txt", mode="r") as file:
+        count = int(file.read())
+    
+    count += 1
+    with open("count.txt", mode="w") as file:
+        file.write(str(count))
+        
+    return f'Numero de visitas: {count}'
