@@ -1,6 +1,11 @@
-def main():
-    print("Hello from 202601-206v!")
+from flask import Flask
 
+app = Flask(__name__)
 
-if __name__ == "__main__":
-    main()
+@app.route("/hello")
+def hello_world():
+    return "<p>Hello, World!</p>"
+
+@app.route("/ch")
+def check_held():
+    return "OK"
