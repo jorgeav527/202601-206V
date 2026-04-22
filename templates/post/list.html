@@ -13,7 +13,7 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody hx-confirm="Are you sure?" hx-target="closest tr" hx-swap="outerHTML swap:1s">
             {% for post in posts %}
             <tr>
                 <td>
@@ -23,9 +23,7 @@
                 <td>{{ post['content'] }}</td>
                 <td>
                     <a href="{{ url_for('edit', id=post['id']) }}"><button>Update</button></a>
-                    <form action="{{ url_for('delete', id=post['id']) }}" method="POST" style="display:inline;">
-                        <button type="submit" onclick="return confirm('Delete?')">Delete</button>
-                    </form>
+                    <button hx-delete="{{ url_for('delete', id=post['id']) }}">Delete</button>
                 </td>
             </tr>
             {% endfor %}
