@@ -84,14 +84,15 @@ def edit(id):
         return render_template("post/update.html", post=post)
 
 
-@app.route("/post/<int:id>/delete", methods=("POST",))
+@app.route("/post/<int:id>/delete", methods=("POST", "DELETE"))
 def delete(id):
-    post = get_post(id)
+    get_post(id)
     conn = get_db_connection()
     conn.execute("DELETE FROM posts WHERE id = ?", (id,))
     conn.commit()
     conn.close()
-    flash('"{}" was successfully deleted!'.format(post["title"]))
+    if request.method == "DELETE":
+        return ""
     return redirect(url_for("get_all_post"))
 
 
