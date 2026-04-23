@@ -1,101 +1,97 @@
 import sqlite3
-
-from flask import Flask, flash, redirect, render_template, request, url_for, abort
+from flask import Flask, jsonify, request, abort
 
 app = Flask(__name__)
-
 
 def get_db_connection():
     conn = sqlite3.connect("basedatos.db")
     conn.row_factory = sqlite3.Row
     return conn
 
-
-@app.route("/", methods=["GET"])
-def home():
-    return render_template("index.html")
-
-
 def get_post(post_id):
     conn = get_db_connection()
     post = conn.execute("SELECT * FROM posts WHERE id = ?", (post_id,)).fetchone()
     conn.close()
     if post is None:
-        abort(404)
+        # Retorna un error 404 en formato JSON
+        abort(404, description="Post no encontrado")
     return post
 
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({"message": "Bienvenido a la API de Posts", "status": "ok"})
 
 @app.route("/post", methods=["GET"])
 def get_all_post():
     conn = get_db_connection()
-    posts = conn.execute("SELECT * FROM posts").fetchall()
+    posts_raw = conn.execute("SELECT * FROM posts").fetchall()
     conn.close()
-    return render_template("post/list.html", posts=posts)
+    posts = [dict(row) for row in posts_raw]
+    return jsonify(posts)
 
-
-@app.route("/post/create", methods=("GET", "POST"))
+@app.route("/post", methods=["POST"]) # Simplificado el path
 def create():
-    if request.method == "POST":
-        title = request.form["title"]
-        content = request.form["content"]
+    # Obtenemos datos de JSON en lugar de request.form
+    data = request.get_json()
+    title = data.get("title")
+    content = data.get("content")
 
-        if not title or not content:
-            flash("Title is required!")
-        else:
-            conn = get_db_connection()
-            conn.execute(
-                "INSERT INTO posts (title, content) VALUES (?, ?)", (title, content)
-            )
-            conn.commit()
-            conn.close()
-            return redirect(url_for("get_all_post"))
+    if not title or not content:
+        return jsonify({"error": "Title and content are required!"}), 400
+    
+    conn = get_db_connection()
+    cursor = conn.execute(
+        "INSERT INTO posts (title, content) VALUES (?, ?)", (title, content)
+    )
+    conn.commit()
+    new_id = cursor.lastrowid
+    conn.close()
+    
+    return jsonify({"id": new_id, "title": title, "content": content}), 200
 
-    if request.method == "GET":
-        return render_template("post/create.html")
-
-
-@app.route("/post/<int:id>")
+@app.route("/post/<int:id>", methods=["GET"])
 def get_post_detail(id):
     post = get_post(id)
-    return render_template("post/single.html", post=post)
+    return jsonify(dict(post))
 
-
-@app.route("/post/<int:id>/edit", methods=("GET", "POST"))
+@app.route("/post/<int:id>", methods=["PUT"])
 def edit(id):
-    post = get_post(id)
-
-    if request.method == "POST":
-        title = request.form["title"]
-        content = request.form["content"]
-
-        if not title:
-            flash("Title is required!")
-        else:
-            conn = get_db_connection()
-            conn.execute(
-                "UPDATE posts SET title = ?, content = ? WHERE id = ?",
-                (title, content, id),
-            )
-            conn.commit()
-            conn.close()
-            return redirect(url_for("get_all_post"))
-
-    if request.method == "GET":
-        return render_template("post/update.html", post=post)
-
-
-@app.route("/post/<int:id>/delete", methods=("POST", "DELETE"))
-def delete(id):
     get_post(id)
+    data = request.get_json()
+    
+    title = data.get("title")
+    content = data.get("content")
+
+    if not title or not content:
+        return jsonify({"error": "Title is required!"}), 400
+
+    conn = get_db_connection()
+    conn.execute(
+        "UPDATE posts SET title = ?, content = ? WHERE id = ?",
+        (title, content, id),
+    )
+    conn.commit()
+    conn.close()
+    
+    return jsonify({"id": id, "title": title, "content": content})
+
+@app.route("/post/<int:id>", methods=["DELETE"])
+def delete(id):
+    get_post(id) # Verifica si existe antes de borrar
     conn = get_db_connection()
     conn.execute("DELETE FROM posts WHERE id = ?", (id,))
     conn.commit()
     conn.close()
-    if request.method == "DELETE":
-        return ""
-    return redirect(url_for("get_all_post"))
+    
+    # 204 No Content es el estándar para borrados exitosos sin retorno de data
+    return '', 204
 
-
-@app.route("/checkheald")
+@app.route("/checkhealth") # Corregido typo 'checkheald'
 def hello_world():
-    return "<p>Todos los sevicion estan activos</p>"
+    return jsonify({
+        "status": "active",
+        "services": "all systems go"
+    })
+
+if __name__ == "__main__":
+    app.run(debug=True)
