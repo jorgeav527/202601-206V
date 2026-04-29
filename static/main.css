@@ -1,0 +1,40 @@
+body {
+
+    background-color: #f4f6f9;
+
+}
+ 
+.card {
+
+    border-radius: 12px;
+
+}
+ 
+.table th,
+
+.table td {
+
+    vertical-align: middle;
+
+}
+ 
+tr.htmx-swapping td {
+
+    opacity: 0;
+
+    transition: opacity 1s ease-out;
+
+}
+ 
+textarea {
+
+    resize: vertical;
+
+}
+ 
+.navbar-brand {
+
+    letter-spacing: 0.5px;
+
+}
+ 
