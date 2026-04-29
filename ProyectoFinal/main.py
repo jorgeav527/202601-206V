@@ -5,8 +5,8 @@ from ProyectoFinal.routes import router
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="API REST de Estudiantes",
-    description="API para gestionar estudiantes",
+    title="Examen API REST de Estudiantes",
+    description="API para gestionar estudiantes - Proyecto Final - Cristobal Contreras",
     version="1.0.0"
 )
 
