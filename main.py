@@ -1,101 +1,47 @@
-import sqlite3
+from fastapi import FastAPI, Request
 
-from flask import Flask, flash, redirect, render_template, request, url_for, abort
+from fastapi.responses import HTMLResponse
 
-app = Flask(__name__)
+from fastapi.templating import Jinja2Templates
+ 
+from database.connection import create_table
 
+from routes.students import router as students_router
+ 
+app = FastAPI(
 
-def get_db_connection():
-    conn = sqlite3.connect("basedatos.db")
-    conn.row_factory = sqlite3.Row
-    return conn
+    title="API REST de Estudiantes",
 
+    description="Proyecto final desarrollado con FastAPI y SQLite3",
 
-@app.route("/", methods=["GET"])
-def home():
-    return render_template("index.html")
+    version="1.0.0"
 
+)
+ 
+templates = Jinja2Templates(directory="templates")
+ 
+ 
+@app.on_event("startup")
 
-def get_post(post_id):
-    conn = get_db_connection()
-    post = conn.execute("SELECT * FROM posts WHERE id = ?", (post_id,)).fetchone()
-    conn.close()
-    if post is None:
-        abort(404)
-    return post
+def startup():
 
+    create_table()
+ 
+ 
+@app.get("/", response_class=HTMLResponse)
 
-@app.route("/post", methods=["GET"])
-def get_all_post():
-    conn = get_db_connection()
-    posts = conn.execute("SELECT * FROM posts").fetchall()
-    conn.close()
-    return render_template("post/list.html", posts=posts)
+def home(request: Request):
 
+    return templates.TemplateResponse(
 
-@app.route("/post/create", methods=("GET", "POST"))
-def create():
-    if request.method == "POST":
-        title = request.form["title"]
-        content = request.form["content"]
+        request=request,
 
-        if not title or not content:
-            flash("Title is required!")
-        else:
-            conn = get_db_connection()
-            conn.execute(
-                "INSERT INTO posts (title, content) VALUES (?, ?)", (title, content)
-            )
-            conn.commit()
-            conn.close()
-            return redirect(url_for("get_all_post"))
+        name="index.html",
 
-    if request.method == "GET":
-        return render_template("post/create.html")
+        context={}
 
-
-@app.route("/post/<int:id>")
-def get_post_detail(id):
-    post = get_post(id)
-    return render_template("post/single.html", post=post)
-
-
-@app.route("/post/<int:id>/edit", methods=("GET", "POST"))
-def edit(id):
-    post = get_post(id)
-
-    if request.method == "POST":
-        title = request.form["title"]
-        content = request.form["content"]
-
-        if not title:
-            flash("Title is required!")
-        else:
-            conn = get_db_connection()
-            conn.execute(
-                "UPDATE posts SET title = ?, content = ? WHERE id = ?",
-                (title, content, id),
-            )
-            conn.commit()
-            conn.close()
-            return redirect(url_for("get_all_post"))
-
-    if request.method == "GET":
-        return render_template("post/update.html", post=post)
-
-
-@app.route("/post/<int:id>/delete", methods=("POST", "DELETE"))
-def delete(id):
-    get_post(id)
-    conn = get_db_connection()
-    conn.execute("DELETE FROM posts WHERE id = ?", (id,))
-    conn.commit()
-    conn.close()
-    if request.method == "DELETE":
-        return ""
-    return redirect(url_for("get_all_post"))
-
-
-@app.route("/checkheald")
-def hello_world():
-    return "<p>Todos los sevicion estan activos</p>"
+    )
+ 
+ 
+app.include_router(students_router)
+ 

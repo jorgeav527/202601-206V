@@ -1,6 +1,38 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>API REST de Estudiantes</title>
+</head>
+<body>
+<h1>API REST de Estudiantes con FastAPI</h1>
+ 
+    <p>Proyecto final para la gestión de estudiantes usando FastAPI y SQLite3.</p>
+ 
+    <h2>Rutas principales</h2>
+ 
+    <ul>
+<li>POST /students</li>
+<li>GET /students</li>
+<li>GET /students/{id}</li>
+<li>PUT /students/{id}</li>
+<li>DELETE /students/{id}</li>
+<li>POST /students/bulk</li>
+<li>GET /students/average</li>
+<li>GET /students/table</li>
+</ul>
+ 
+    <p>
 
-{% block content %}
-    <h1>Bienvenido a Mi Blog</h1>
-    <p>Este es un blog simple hecho con Flask.</p>
-{% endblock content %}
+        Para probar la API ingresa a:
+<a href="/docs">/docs</a>
+</p>
+ 
+    <p>
+
+        Para ver la tabla HTML parcial:
+<a href="/students/table">/students/table</a>
+</p>
+</body>
+</html>
+ 
