@@ -1,0 +1,21 @@
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>DNI</th>
+        <th>Nombre</th>
+        <th>Edad</th>
+        <th>Nota</th>
+        <th>Aprobado</th>
+    </tr>
+
+    {% for s in students %}
+    <tr>
+        <td>{{ s.id }}</td>
+        <td>{{ s.dni }}</td>
+        <td>{{ s.name }}</td>
+        <td>{{ s.age }}</td>
+        <td>{{ s.grade }}</td>
+        <td>{{ s.is_approved }}</td>
+    </tr>
+    {% endfor %}
+</table>
