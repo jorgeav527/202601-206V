@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario de registro</title>
+</head>
+<body>
+    <h1>Formulario de registro</h1>
+
+    <form method="POST" action="/count">
+        <label>Nombre:</label>
+        <input type="text" name="nombre" required>
+
+        <br><br>
+
+        <label>Edad:</label>
+        <input type="number" name="edad" required>
+
+        <br><br>
+
+        <label>Casado:</label>
+        <select name="casado" required>
+            <option value="Sí">Sí</option>
+            <option value="No">No</option>
+        </select>
+
+        <br><br>
+
+        <button type="submit">Enviar</button>
+    </form>
+</body>
+</html>
