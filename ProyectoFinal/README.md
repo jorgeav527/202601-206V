@@ -9,8 +9,13 @@
 #7. En routes.py se definieron los endpoints
 #8. En la subcarpeta templates, se creo un archivo students_table.html que incluye la estructura de la tabla de los estudiantes registrados
 #9. Se creo main.py para el lanzamiento de la API y el uso de todas las rutas incluidas en el proyecto
-#10. Se abre la terminal - bash y se ingresa uv run uvicorn ProyectoFinal.main:app --reload
-#11. Abrir en el navegador los siguientes enlaces:
+
+#Para ejecutar
+#1. Abrir la terminal - bash 
+#2. Cambiar de rama: git checkout branch-cristobal
+#3. Instalar dependencias: uv sync
+#4. En el terminal, ingresar lo siguiente: uv run uvicorn ProyectoFinal.main:app --reload
+#5. Abrir en el navegador los siguientes enlaces:
     #Enlace 1: http://127.0.0.1:8000/docs
     #Enlace 2: http://127.0.0.1:8000/students/table
 
