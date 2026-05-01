@@ -1,17 +1,19 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Respuesta</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-<h2>Resultado</h2>
+{% block title %}Respuesta{% endblock %}
 
-<p>Usuario guardado correctamente.</p>
-<p>Total de usuarios registrados: {{ count_response }}</p>
+{% block content %}
 
-<br>
-<a href="/count">Volver al formulario</a>
+<div class="alert alert-success" role="alert">
+    Usuario guardado correctamente.
+</div>
 
-</body>
-</html>
+<div class="card shadow">
+    <div class="card-body">
+        <h4>Total de usuarios registrados: {{ count_response }}</h4>
+
+        <a href="/count" class="btn btn-primary mt-3">Registrar otro usuario</a>
+    </div>
+</div>
+
+{% endblock %}
